@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>Our Little Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="login">
+    <div class="win focused" id="login-win">
+      <div class="titlebar"><span class="title" id="login-title"></span><button class="tbtn" aria-label="close">✕</button></div>
+      <div class="login-body">
+        <div class="login-key">🔑</div>
+        <div class="login-main">
+          <p id="login-msg"></p>
+          <label>User name: <input id="login-user" disabled></label>
+          <label>Password: <input id="login-pw" type="password" autocomplete="off" autofocus></label>
+          <p id="login-err" hidden>Wrong Password!</p>
+        </div>
+        <div class="login-btns">
+          <button class="btn" id="login-ok">OK</button>
+          <button class="btn" id="login-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="desktop" hidden></div>
+  <div id="windows"></div>
+
+  <div id="startmenu" hidden>
+    <div class="sm-side"><span id="sm-title"></span></div>
+    <div class="sm-items">
+      <button data-act="story">📄 Our Story</button>
+      <button data-act="booth">📷 Photobooth</button>
+      <button data-act="paint">🎨 Paint</button>
+      <hr>
+      <button data-act="logout">🔒 Log Off</button>
+    </div>
+  </div>
+
+  <div id="taskbar" hidden>
+    <button id="start" class="btn">🍀 Start</button>
+    <div class="sep"></div>
+    <div id="tasks"></div>
+    <div class="sep"></div>
+    <div id="tray">
+      <span id="dday" title="D-day"></span>
+      <span id="clover" title="clover">🍀</span>
+      <span id="clock"></span>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
