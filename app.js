@@ -69,6 +69,7 @@
     $("#desktop").hidden = false;
     $("#taskbar").hidden = false;
     buildDesktop();
+    window.DesktopMemos.enter();
     tick();
     if (!openWins.story) openNote("story");
   }
@@ -82,6 +83,7 @@
     var start = new Date(S.startDate + "T00:00:00");
     var days = Math.floor((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - start) / 864e5) + 1;
     $("#dday").textContent = "♥ D+" + days;
+    window.RenewalNotice.update(d);
   }
   setInterval(tick, 20000);
   $("#clover").onclick = function () { alert("This moment will come again.\n우리의 오늘도 기념일이에요."); };
@@ -90,8 +92,18 @@
   function buildDesktop() {
     var dt = $("#desktop");
     if (dt.children.length) return;
+    var iconGrid = el("div", "desktop-icons");
+    dt.appendChild(iconGrid);
     S.icons.forEach(function (ic) {
-      var d = el("div", "dicon", '<div class="ic">' + ic.icon + '</div><span class="lb">' + esc(ic.label) + "</span>");
+      var d = el("div", "dicon");
+      var iconBox = el("div", "ic");
+      var iconImage = el("img");
+      iconImage.src = ic.icon;
+      iconImage.alt = "";
+      iconImage.draggable = false;
+      iconBox.appendChild(iconImage);
+      var label = el("span", "lb"); label.textContent = ic.label;
+      d.append(iconBox, label);
       var open = function () { launch(ic); };
       d.addEventListener("click", function () {
         document.querySelectorAll(".dicon.sel").forEach(function (x) { x.classList.remove("sel"); });
@@ -99,10 +111,10 @@
         if (matchMedia("(pointer:coarse)").matches) open();
       });
       d.addEventListener("dblclick", open);
-      dt.appendChild(d);
+      iconGrid.appendChild(d);
     });
     dt.addEventListener("click", function (e) {
-      if (e.target === dt) document.querySelectorAll(".dicon.sel").forEach(function (x) { x.classList.remove("sel"); });
+      if (e.target === dt || e.target === iconGrid) document.querySelectorAll(".dicon.sel").forEach(function (x) { x.classList.remove("sel"); });
     });
   }
 
@@ -229,13 +241,25 @@
   }
 
   var ICON = { text: "📄", image: "🖼️", video: "🎞️", audio: "🎵", folder: "📁" };
+  var FILE_ICON = { text: "assets/icons/letter.svg", image: "assets/icons/photo.svg", video: "assets/icons/video.svg", audio: "assets/icons/music.svg" };
   function openFolder(ref) {
     var f = S.folders[ref];
     createWin("folder:" + ref, f.title, { w: 520, h: 400 }, function (w, b) {
       b.appendChild(el("div", "addr", "/" + esc(f.title) + "/"));
       var c = el("div", "content"); var list = el("div", "files");
       f.files.forEach(function (file) {
-        var d = el("div", "file", '<div class="ic">' + ICON[file.type] + "</div>" + esc(file.name));
+        var d = el("div", "file");
+        var iconBox = el("div", "ic");
+        if (FILE_ICON[file.type]) {
+          var iconImage = el("img");
+          iconImage.src = FILE_ICON[file.type];
+          iconImage.alt = "";
+          iconImage.draggable = false;
+          iconBox.appendChild(iconImage);
+        } else {
+          iconBox.textContent = ICON[file.type] || "";
+        }
+        d.append(iconBox, document.createTextNode(file.name));
         d.addEventListener("click", function () {
           list.querySelectorAll(".sel").forEach(function (x) { x.classList.remove("sel"); });
           d.classList.add("sel");
@@ -289,7 +313,8 @@
       }
       w.onclose = function () { if (stream) stream.getTracks().forEach(function (t) { t.stop(); }); };
 
-      sh.onclick = function () {
+      sh.onclick = async function () {
+        await document.fonts.load('28px "Departure Mono"');
         var cv = document.createElement("canvas"); cv.width = 600; cv.height = 800;
         var g = cv.getContext("2d");
         g.fillStyle = "#fdf6f9"; g.fillRect(0, 0, 600, 800);
@@ -300,12 +325,12 @@
         } else {
           var gr = g.createLinearGradient(0, 0, 600, 800); gr.addColorStop(0, "#fde3ec"); gr.addColorStop(1, "#f6a6c1");
           g.fillStyle = gr; g.fillRect(0, 0, 600, 800);
-          g.font = "120px serif"; g.textAlign = "center"; g.fillStyle = "#fff"; g.fillText("♥", 300, 430);
+          g.font = '120px "Departure Mono", serif'; g.textAlign = "center"; g.fillStyle = "#fff"; g.fillText("♥", 300, 430);
         }
         g.strokeStyle = frame.color; g.lineWidth = 50; g.strokeRect(0, 0, 600, 800);
-        g.fillStyle = frame.color; g.font = "56px serif"; g.textAlign = "center";
+        g.fillStyle = frame.color; g.font = '56px "Departure Mono", serif'; g.textAlign = "center";
         [[60, 80], [540, 80], [60, 760], [540, 760]].forEach(function (p) { g.fillText(frame.deco, p[0], p[1]); });
-        g.fillStyle = "#fff"; g.font = "28px monospace"; g.fillText(S.names.join(" ♥ ") + "  " + new Date().toISOString().slice(0, 10), 300, 785);
+        g.fillStyle = "#fff"; g.font = '28px "Departure Mono", monospace'; g.fillText(S.names.join(" ♥ ") + "  " + new Date().toISOString().slice(0, 10), 300, 785);
         result.innerHTML = "";
         var a = el("a", "btn", "💾 저장"); a.href = cv.toDataURL("image/png"); a.download = "photobooth-" + Date.now() + ".png"; a.style.cssText = "text-decoration:none;color:#3a1f2a;display:inline-block";
         var th = el("img"); th.src = a.href; th.style.cssText = "height:60px;border:2px solid #fff";
@@ -353,7 +378,7 @@
 
   // ---------- start menu ----------
   var sm = $("#startmenu");
-  $("#start").onclick = function (e) { e.stopPropagation(); sm.hidden = !sm.hidden; };
+  $("#start").onclick = function (e) { e.stopPropagation(); sm.hidden = !sm.hidden; $("#start").setAttribute("aria-expanded", String(!sm.hidden)); };
   document.addEventListener("pointerdown", function (e) { if (!sm.hidden && !e.target.closest("#startmenu,#start")) sm.hidden = true; });
   sm.addEventListener("click", function (e) {
     var a = e.target.closest("button"); if (!a) return; sm.hidden = true;

@@ -4,8 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>Our Little Lab</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,8 +14,8 @@
         <div class="login-key">🔑</div>
         <div class="login-main">
           <p id="login-msg"></p>
-          <label>User name: <input id="login-user" disabled></label>
-          <label>Password: <input id="login-pw" type="password" autocomplete="off" autofocus></label>
+          <label><span>User name:</span> <input id="login-user" disabled></label>
+          <label><span>Password:</span> <input id="login-pw" type="password" autocomplete="off" autofocus></label>
           <p id="login-err" hidden>Wrong Password!</p>
         </div>
         <div class="login-btns">
@@ -29,11 +27,22 @@
   </div>
 
   <div id="desktop" hidden></div>
+  <div id="desktop-memos" hidden></div>
+  <div id="memo-placement" hidden>
+    <p role="status">메모를 붙일 곳을 눌러 주세요. <button id="memo-placement-cancel" class="btn">취소</button></p>
+    <div class="memo-preview" aria-hidden="true">Memo</div>
+  </div>
   <div id="windows"></div>
 
   <div id="startmenu" hidden>
     <div class="sm-side"><span id="sm-title"></span></div>
     <div class="sm-items">
+      <section id="renewal-notice" class="renewal-notice" aria-labelledby="renewal-title" hidden>
+        <span class="renewal-label">! 알림</span>
+        <p id="renewal-timing"></p>
+        <p id="renewal-title">기간을 연장하시겠습니까?</p>
+        <a id="renewal-link" href="https://urluv.shop/" target="_blank" rel="noopener noreferrer">Yes ↗</a>
+      </section>
       <button data-act="story">📄 Our Story</button>
       <button data-act="booth">📷 Photobooth</button>
       <button data-act="paint">🎨 Paint</button>
@@ -43,8 +52,13 @@
   </div>
 
   <div id="taskbar" hidden>
-    <button id="start" class="btn">🍀 Start</button>
+    <span id="renewal-badge" aria-hidden="true" hidden>!</span>
+    <button id="start" class="btn" aria-label="Start" aria-expanded="false" aria-controls="startmenu">
+      🍀 Start
+    </button>
     <div class="sep"></div>
+    <button id="memo-add" class="btn">메모 추가</button>
+    <button id="memo-toggle" class="btn" aria-controls="desktop-memos" aria-expanded="true">메모 숨기기</button>
     <div id="tasks"></div>
     <div class="sep"></div>
     <div id="tray">
@@ -55,6 +69,8 @@
   </div>
 
   <script src="data.js"></script>
+  <script src="memos.js"></script>
+  <script src="renewal.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

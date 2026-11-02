@@ -8,25 +8,29 @@ window.SITE = {
   passwordSalt: "our-lab:",
   passwordHash: "5b3020281247b63abe1dc850edde861a584ea32047e514b9e055f1dc081b296d",
   loginTitle: "Our Little Lab - Login",
-  loginMessage: "우리의 시작을 기억하는 날짜 네 자리를 입력해 주세요.\n(힌트: MMDD)",
+  loginMessage: "우리의 시작을 날짜 네 자리로 입력해 주세요.\n(힌트: MMDD)",
   userName: "Dearest_us",
   startDate: "2023-06-18",     // 기념일 시작일 (D-day 계산)
-  names: ["민준", "서연"],
+  expiresOn: "2026-11-05",     // 사용 만료일(한국 날짜 기준) 
+  renewalNoticeDays: 3,        // 만료 n일 전부터 알림 표시
+  renewalUrl: "https://urluv.shop/",
+  names: ["민준", "서연"],      // 이름 변경
   theme: { main: "#e8789a", dark: "#b8456b", light: "#ffeaf1", bg: "#f6a6c1" },
 
   // 바탕화면 아이콘 (type: folder | note | photobooth | paint | link | trash)
   icons: [
-    { id: "story",   label: "Our Story", icon: "📄", type: "note",  ref: "story" },
-    { id: "letters", label: "Letters",   icon: "💌", type: "folder", ref: "letters" },
-    { id: "photo",   label: "Photo",     icon: "🖼️", type: "folder", ref: "photo" },
-    { id: "video",   label: "Video",     icon: "🎞️", type: "folder", ref: "video" },
-    { id: "record",  label: "Record",    icon: "🎵", type: "folder", ref: "record" },
-    { id: "booth",   label: "Photobooth",icon: "📷", type: "photobooth" },
-    { id: "paint",   label: "Paint",     icon: "🎨", type: "paint" },
-    { id: "net",     label: "Internet",  icon: "🌐", type: "link", url: "https://example.com" },
-    { id: "trash",   label: "Recycle Bin", icon: "🗑️", type: "trash" }
+    { id: "story",   label: "Our Story", icon: "assets/icons/our story.svg", type: "note",  ref: "story" },
+    { id: "letters", label: "Letters",   icon: "assets/icons/letter.svg", type: "folder", ref: "letters" },
+    { id: "photo",   label: "Photo",     icon: "assets/icons/photo.svg", type: "folder", ref: "photo" },
+    { id: "video",   label: "Video",     icon: "assets/icons/video.svg", type: "folder", ref: "video" },
+    { id: "record",  label: "Record",    icon: "assets/icons/music.svg", type: "folder", ref: "record" },
+    { id: "booth",   label: "Photobooth",icon: "assets/icons/photo booth.svg", type: "photobooth" },
+    { id: "paint",   label: "Paint",     icon: "assets/icons/paint.svg", type: "paint" },
+    { id: "net",     label: "Internet",  icon: "assets/icons/internet.svg", type: "link", url: "https://urluv.shop/" },
+    { id: "trash",   label: "Recycle Bin", icon: "assets/icons/recycle bin.svg", type: "trash" }
   ],
 
+  //name, text, caption 변경
   notes: {
     story: {
       title: "Our-Story.txt",
