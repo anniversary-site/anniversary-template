@@ -89,7 +89,7 @@
   function mountMinesweeper(body) {
     const game = new MinesweeperAPI();
     const root = document.createElement('div'); root.className = 'minesweeper';
-    root.innerHTML = '<div class="mine-toolbar"><span class="mine-count"></span><button class="btn mine-reset">새 게임</button></div><p class="mine-status" role="status"></p><div class="mine-board" role="group" aria-label="지뢰찾기 게임판, 9행 9열"></div><p class="mine-help">클릭: 칸 열기 · 우클릭: 깃발<br>모바일: 짧게 터치하면 열기 · 길게 누르면 깃발</p>';
+    root.innerHTML = '<div class="mine-toolbar"><span class="mine-count"></span><button class="btn mine-reset">새 게임</button></div><p class="mine-status" role="status"></p><div class="mine-board" role="group" aria-label="minesweeper 게임판, 9행 9열"></div><p class="mine-help">클릭: 칸 열기 · 우클릭: 깃발<br>모바일: 짧게 터치하면 열기 · 길게 누르면 깃발</p>';
     body.appendChild(root);
     const board = root.querySelector('.mine-board'), status = root.querySelector('.mine-status');
     const count = root.querySelector('.mine-count');
@@ -103,7 +103,15 @@
         const bt = buttons[r * game.cols + c];
         const showMine = cell.isMine && game.finished;
         bt.className = 'mine-cell' + (cell.isRevealed ? ' revealed' : '') + (showMine ? ' mine' : '');
-        bt.textContent = showMine ? '💗' : cell.isFlagged ? '🚩' : cell.isRevealed && cell.neighborMines ? cell.neighborMines : '';
+        bt.textContent = showMine ? '' : cell.isFlagged ? '🚩' : cell.isRevealed && cell.neighborMines ? cell.neighborMines : '';
+        if (showMine) {
+          const heart = document.createElement('img');
+          heart.src = 'assets/icons/heart.svg';
+          heart.alt = '';
+          heart.draggable = false;
+          heart.className = 'mine-heart';
+          bt.appendChild(heart);
+        }
         bt.dataset.number = cell.neighborMines;
         const label = showMine ? '지뢰' : cell.isFlagged ? (game.status === 'game-over' && !cell.isMine ? '잘못 꽂은 깃발' : '깃발') : cell.isRevealed ? (cell.neighborMines ? '주변 지뢰 ' + cell.neighborMines + '개' : '빈 칸') : '닫힌 칸';
         bt.setAttribute('aria-label', (r + 1) + '행 ' + (c + 1) + '열, ' + label);
