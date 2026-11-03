@@ -71,7 +71,7 @@
     buildDesktop();
     window.DesktopMemos.enter();
     tick();
-    if (!openWins.story) openNote("story");
+    if (!openWins.information) openInformation();
   }
   try { if (sessionStorage.getItem("anniv-auth") === "1") { setTimeout(enter, 0); } } catch (e) {}
 
@@ -119,7 +119,8 @@
   }
 
   function launch(ic) {
-    if (ic.type === "folder") openFolder(ic.ref);
+    if (ic.type === "information") openInformation();
+    else if (ic.type === "folder") openFolder(ic.ref);
     else if (ic.type === "note") openNote(ic.ref);
     else if (ic.type === "photobooth") openBooth();
     else if (ic.type === "paint") openPaint();
@@ -192,9 +193,23 @@
   }
 
   // ---------- apps ----------
+  function openInformation() {
+    createWin("information", "Our Story", { w: 520, h: 360 }, function (w, body) {
+      var info = S.information || {};
+      var content = el("div", "content information-content");
+      var list = el("dl", "information-list");
+      [["특별한 날", info.specialDate], ["특별한 장소", info.specialPlace], ["우리의 이야기", info.story]].forEach(function (field) {
+        var term = el("dt"); term.textContent = field[0];
+        var detail = el("dd"); detail.textContent = field[1] || "";
+        list.append(term, detail);
+      });
+      content.appendChild(list); body.appendChild(content);
+    });
+  }
+
   function openNote(ref) {
     var n = S.notes[ref];
-    createWin("note:" + ref, n.title + " - Notepad", { w: 560, h: 420 }, function (w, b) {
+    createWin("note:" + ref, ref === "letter" ? "Letter" : n.title + " - Notepad", { w: 560, h: 420 }, function (w, b) {
       b.appendChild(el("div", "menubar", "<span>File</span><span>Edit</span><span>Search</span><span>Help</span>"));
       var c = el("div", "content"); var p = el("pre", "note"); p.textContent = n.text; c.appendChild(p); b.appendChild(c);
     });
@@ -242,18 +257,20 @@
   }
 
   var ICON = { game: "💗", text: "📄", image: "🖼️", video: "🎞️", audio: "🎵", folder: "📁" };
-  var FILE_ICON = { text: "assets/icons/letter.svg", image: "assets/icons/photo.svg", video: "assets/icons/video.svg", audio: "assets/icons/music.svg" };
+  var FILE_ICON = { game: "assets/icons/heart.svg", text: "assets/icons/letter.svg", image: "assets/icons/file.svg", video: "assets/icons/video.svg", audio: "assets/icons/music.svg" };
   function openFolder(ref) {
+    if (ref === "record") return openMusic();
     var f = S.folders[ref];
     createWin("folder:" + ref, f.title, { w: 520, h: 400 }, function (w, b) {
       b.appendChild(el("div", "addr", "/" + esc(f.title) + "/"));
       var c = el("div", "content"); var list = el("div", "files");
       f.files.forEach(function (file) {
-        var d = el("div", "file");
+        var d = el("div", "file" + (file.type === "game" ? " game-file" : ""));
         var iconBox = el("div", "ic");
-        if (FILE_ICON[file.type]) {
+        var iconSrc = file.type === "folder" && ref.indexOf("photo") === 0 ? "assets/icons/file.svg" : FILE_ICON[file.type];
+        if (iconSrc) {
           var iconImage = el("img");
-          iconImage.src = FILE_ICON[file.type];
+          iconImage.src = iconSrc;
           iconImage.alt = "";
           iconImage.draggable = false;
           iconBox.appendChild(iconImage);
@@ -377,8 +394,15 @@
     });
   }
 
+  function openMusic() {
+    createWin("music", "Music", { w: 520, h: 640 }, function (w, body) {
+      w.el.classList.add("music-window");
+      w.onclose = window.MusicPlayer.mount(body);
+    });
+  }
+
   function openMinesweeper() {
-    createWin("game:minesweeper", "지뢰찾기 - Game", { w: 390, h: 530 }, function (w, body) {
+    createWin("game:minesweeper", "Game - minesweeper", { w: 390, h: 530 }, function (w, body) {
       w.onclose = window.mountMinesweeper(body);
     });
   }
@@ -390,7 +414,7 @@
   sm.addEventListener("click", function (e) {
     var a = e.target.closest("button"); if (!a) return; sm.hidden = true;
     var act = a.dataset.act;
-    if (act === "story") openNote("story");
+    if (act === "information") openInformation();
     else if (act === "booth") openBooth();
     else if (act === "paint") openPaint();
     else if (act === "logout") { try { sessionStorage.removeItem("anniv-auth"); } catch (er) {} location.reload(); }

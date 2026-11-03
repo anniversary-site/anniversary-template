@@ -17,10 +17,10 @@ window.SITE = {
   names: ["민준", "서연"],      // 이름 변경
   theme: { main: "#e8789a", dark: "#b8456b", light: "#ffeaf1", bg: "#f6a6c1" },
 
-  // 바탕화면 아이콘 (type: folder | note | photobooth | paint | link | trash)
+  // 바탕화면 아이콘 (type: information | folder | note | photobooth | paint | link | trash)
   icons: [
-    { id: "story",   label: "Our Story", icon: "assets/icons/our story.svg", type: "note",  ref: "story" },
-    { id: "letters", label: "Letters",   icon: "assets/icons/letter.svg", type: "folder", ref: "letters" },
+    { id: "information", label: "Our Story", icon: "assets/icons/our story.svg", type: "information" },
+    { id: "letter", label: "Letter",   icon: "assets/icons/letter.svg", type: "note", ref: "letter" },
     { id: "photo",   label: "Photo",     icon: "assets/icons/photo.svg", type: "folder", ref: "photo" },
     { id: "video",   label: "Video",     icon: "assets/icons/video.svg", type: "folder", ref: "video" },
     { id: "record",  label: "Music",    icon: "assets/icons/music.svg", type: "folder", ref: "record" },
@@ -31,11 +31,19 @@ window.SITE = {
     { id: "trash",   label: "Recycle Bin", icon: "assets/icons/recycle bin.svg", type: "trash" }
   ],
 
-  //name, text, caption 변경
+  // 기념일 정보
+  information: {
+    specialDate: "2026.12.21",
+    specialPlace: "서강대학교 정문",
+    story: "종강종강"
+  },
+
+  // 고객에게 받은 편지
+  //  줄바꿈 = \n
   notes: {
-    story: {
-      title: "Our-Story.txt",
-      text: "[우리의 이야기]\n\n< 2023년 6월 18일, 우리는 처음 만났어요. >\n그날 이후로 모든 날이 기념일이 되었습니다.\n\n< 이 컴퓨터에는 우리의 기록만 남아 있어요. >\n사진, 영상, 편지, 목소리. 천천히 열어 보세요.\n\n< 마지막으로 >\n앞으로도 같이, 오래오래.\n- 서연 & 민준"
+    letter: {
+      title: "Letter",
+      text: "이 편지는 영국에서 최초로 시작되어"
     }
   },
 
@@ -43,15 +51,7 @@ window.SITE = {
     game: {
       title: "Game",
       files: [
-        { name: "지뢰찾기", type: "game", ref: "minesweeper" }
-      ]
-    },
-    letters: {
-      title: "Letters",
-      files: [
-        { name: "첫번째편지.txt", type: "text", text: "처음 만난 날 생각나?\n그때부터 지금까지, 매일이 선물이었어.\n\n사랑해. 앞으로도 잘 부탁해." },
-        { name: "100일.txt", type: "text", text: "100일 축하해!\n작은 것들이 쌓여서 큰 마음이 되었어." },
-        { name: "1주년.txt", type: "text", text: "1주년 기념 편지\n\n네 덕분에 한 해가 반짝였어." }
+        { name: "minesweeper", type: "game", ref: "minesweeper" }
       ]
     },
     photo: {
@@ -90,6 +90,15 @@ window.SITE = {
         { name: "민준의 목소리.mp3", type: "audio", src: "assets/record/minjun.mp3" }
       ]
     }
+  },
+
+  // 제목, 가수, YouTube 링크를 tracks에 추가
+  music: {
+    title: "Our playlist",
+    tracks: [
+      { title: "Heavy Serenade", artist: "NMIXX", url: "https://www.youtube.com/embed/hGqYdubpcCM?si=0dZNiwTDXWKPli7O" },
+      { title: "Unayaha ", artist: "CHIIKAWA", url: "https://www.youtube.com/watch?v=wFOjWCLPDDM" }
+    ]
   },
 
   // 포토부스 프레임

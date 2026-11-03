@@ -916,3 +916,249 @@ select {
   user-select: none;
 }
 
+/* SVG icons in the start menu and Minesweeper */
+.sm-items button[data-act] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sm-icon {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.mine-heart {
+  display: block;
+  width: 80%;
+  height: 80%;
+  margin: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Keep game names on one line. */
+.file.game-file {
+  width: 112px;
+  white-space: nowrap;
+  word-break: normal;
+}
+/* Music playlist */
+.music-app {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 14px;
+}
+
+.music-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.music-header > img {
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
+  padding: 8px;
+  background: rgba(255, 255, 255, .5);
+  border: 2px solid;
+  border-color: var(--dark) #fff #fff var(--dark);
+}
+
+.music-header > div {
+  min-width: 0;
+}
+
+.music-header h2 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+.music-now {
+  margin: 0 0 6px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.music-external {
+  color: var(--dark);
+}
+
+.music-player {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 200px;
+  aspect-ratio: 16 / 9;
+  background: #3a1f2a;
+  color: #fff;
+  text-align: center;
+  line-height: 1.8;
+  margin-bottom: 14px;
+}
+
+.music-player iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
+
+.music-table-wrap {
+  max-height: 230px;
+  overflow: auto;
+  background: #fff;
+  border: 2px solid;
+  border-color: var(--dark) #fff #fff var(--dark);
+}
+
+.music-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.music-table th {
+  position: sticky;
+  top: 0;
+  background: var(--light);
+  border-bottom: 2px solid var(--dark);
+  font-weight: normal;
+}
+
+.music-table th,
+.music-table td {
+  padding: 7px 9px;
+  overflow-wrap: anywhere;
+}
+
+.music-table td:first-child {
+  width: 54px;
+}
+
+.music-table td:last-child {
+  width: 30%;
+}
+
+.music-table button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  font-size: inherit;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.music-table button:hover {
+  text-decoration: underline;
+}
+
+.music-table .playing {
+  background: var(--main);
+  color: #fff;
+}
+
+.music-empty,
+.music-footnote {
+  padding: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* Music window sizing and playback controls */
+.music-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 14px;
+}
+
+.music-controls .btn {
+  min-width: 0;
+  padding: 4px 8px;
+}
+
+.music-controls .btn:disabled {
+  opacity: .5;
+  cursor: default;
+}
+
+.music-repeat[aria-pressed="true"] {
+  background: var(--main);
+  color: #fff;
+}
+
+@media (min-width: 641px) {
+  #windows .music-window:not(.max) {
+    resize: both;
+    overflow: hidden;
+    min-width: 360px;
+    min-height: 380px;
+    max-width: calc(100vw - 8px);
+    max-height: calc(100dvh - 42px);
+  }
+}
+
+/* Reserve enough width for the longer pause label. */
+.music-controls .music-play {
+  width: calc(12ch + 20px);
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* Keep the Track heading on one line. */
+.music-table th:first-child,
+.music-table td:first-child {
+  width: 72px;
+  min-width: 72px;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+/* Commemoration information */
+.information-content {
+  padding: 20px;
+  user-select: text;
+}
+
+.information-list {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 16px 18px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.information-list dt {
+  color: var(--dark);
+}
+
+.information-list dd {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 420px) {
+  .information-list {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .information-list dd {
+    margin-bottom: 12px;
+  }
+}
