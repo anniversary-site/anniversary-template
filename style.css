@@ -240,9 +240,7 @@ select {
   padding: 10px;
   --desktop-icons-height: 800px;
   overflow-x: auto;
-  background: radial-gradient(circle at 20% 20%,rgba(255,255,255,.5) 0 2px,transparent 3px) 0 0/46px 46px,
-  radial-gradient(circle at 70% 60%,rgba(255,255,255,.35) 0 2px,transparent 3px) 0 0/62px 62px,
-  linear-gradient(180deg,#fde3ec,var(--bg) 70%,#e8789a);
+  background: var(--bg) url("assets/background/배경화면1.png") center / cover no-repeat;
 }
 .desktop-icons {
   /* Keep the same height limit; wrap into another column on shorter screens. */
