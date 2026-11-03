@@ -23,8 +23,9 @@ window.SITE = {
     { id: "letters", label: "Letters",   icon: "assets/icons/letter.svg", type: "folder", ref: "letters" },
     { id: "photo",   label: "Photo",     icon: "assets/icons/photo.svg", type: "folder", ref: "photo" },
     { id: "video",   label: "Video",     icon: "assets/icons/video.svg", type: "folder", ref: "video" },
-    { id: "record",  label: "Record",    icon: "assets/icons/music.svg", type: "folder", ref: "record" },
+    { id: "record",  label: "Music",    icon: "assets/icons/music.svg", type: "folder", ref: "record" },
     { id: "booth",   label: "Photobooth",icon: "assets/icons/photo booth.svg", type: "photobooth" },
+    { id: "game", label: "Game", icon: "assets/icons/game.svg", type: "folder", ref: "game" },
     { id: "paint",   label: "Paint",     icon: "assets/icons/paint.svg", type: "paint" },
     { id: "net",     label: "Internet",  icon: "assets/icons/internet.svg", type: "link", url: "https://urluv.shop/" },
     { id: "trash",   label: "Recycle Bin", icon: "assets/icons/recycle bin.svg", type: "trash" }
@@ -39,6 +40,12 @@ window.SITE = {
   },
 
   folders: {
+    game: {
+      title: "Game",
+      files: [
+        { name: "지뢰찾기", type: "game", ref: "minesweeper" }
+      ]
+    },
     letters: {
       title: "Letters",
       files: [
@@ -77,7 +84,7 @@ window.SITE = {
       ]
     },
     record: {
-      title: "Record",
+      title: "Music",
       files: [
         { name: "서연의 목소리.mp3", type: "audio", src: "assets/record/seoyeon.mp3" },
         { name: "민준의 목소리.mp3", type: "audio", src: "assets/record/minjun.mp3" }
