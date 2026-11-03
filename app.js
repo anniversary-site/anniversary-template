@@ -213,6 +213,7 @@
   }
 
   function viewFile(f) {
+    if (f.type === "game" && f.ref === "minesweeper") return openMinesweeper();
     if (f.type === "text") return textWin(f.name, f.text);
     if (f.type === "folder") return openFolder(f.ref);
     createWin("view:" + f.name, f.name, { w: 520, h: 420 }, function (w, b) {
@@ -240,7 +241,7 @@
     });
   }
 
-  var ICON = { text: "📄", image: "🖼️", video: "🎞️", audio: "🎵", folder: "📁" };
+  var ICON = { game: "💗", text: "📄", image: "🖼️", video: "🎞️", audio: "🎵", folder: "📁" };
   var FILE_ICON = { text: "assets/icons/letter.svg", image: "assets/icons/photo.svg", video: "assets/icons/video.svg", audio: "assets/icons/music.svg" };
   function openFolder(ref) {
     var f = S.folders[ref];
@@ -373,6 +374,12 @@
       cv.addEventListener("pointerup", function () { drawing = false; });
       clr.onclick = function () { g.fillStyle = "#fff"; g.fillRect(0, 0, cv.width, cv.height); };
       sv.onclick = function () { var a = document.createElement("a"); a.href = cv.toDataURL("image/png"); a.download = "paint.png"; a.click(); };
+    });
+  }
+
+  function openMinesweeper() {
+    createWin("game:minesweeper", "지뢰찾기 - Game", { w: 390, h: 530 }, function (w, body) {
+      w.onclose = window.mountMinesweeper(body);
     });
   }
 

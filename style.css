@@ -238,7 +238,7 @@ select {
   position: fixed;
   inset: 0 0 34px 0;
   padding: 10px;
-  --desktop-icons-height: 700px;
+  --desktop-icons-height: 800px;
   overflow-x: auto;
   background: radial-gradient(circle at 20% 20%,rgba(255,255,255,.5) 0 2px,transparent 3px) 0 0/46px 46px,
   radial-gradient(circle at 70% 60%,rgba(255,255,255,.35) 0 2px,transparent 3px) 0 0/62px 62px,
@@ -825,3 +825,94 @@ select {
     animation: none;
   }
 }
+/* Minesweeper */
+.minesweeper {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px;
+  background: var(--light);
+}
+
+.mine-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.mine-toolbar {
+  padding: 8px;
+  border: 2px solid;
+  border-color: var(--dark) #fff #fff var(--dark);
+}
+
+.mine-count {
+  min-width: 46px;
+  white-space: nowrap;
+  color: var(--dark);
+}
+
+.mine-status,
+.mine-help {
+  margin: 8px 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.mine-board {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  width: 100%;
+  max-width: 324px;
+  margin: 0 auto;
+  border: 3px solid;
+  border-color: var(--dark) #fff #fff var(--dark);
+  background: var(--dark);
+  gap: 1px;
+}
+
+.mine-cell {
+  min-width: 0;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 2px solid;
+  border-color: #fff var(--dark) var(--dark) #fff;
+  background: #f7c8d8;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.mine-cell.revealed {
+  border: 0;
+  background: #fff5f8;
+  cursor: default;
+}
+
+.mine-cell.mine {
+  background: #f6a6c1;
+}
+
+.mine-cell:focus-visible {
+  outline: 2px solid #3a1f2a;
+  outline-offset: -3px;
+}
+
+.mine-cell[data-number="1"] { color: #2254ad; }
+.mine-cell[data-number="2"] { color: #286b40; }
+.mine-cell[data-number="3"] { color: #b52f4c; }
+.mine-cell[data-number="4"] { color: #6739a0; }
+.mine-cell[data-number="5"],
+.mine-cell[data-number="6"],
+.mine-cell[data-number="7"],
+.mine-cell[data-number="8"] { color: #773745; }
+
+/* Touch uses tap to reveal and long press to flag. */
+.mine-cell {
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
