@@ -1,5 +1,5 @@
 // URLUV 백엔드에서 고객 사이트를 불러옵니다.
-// 주소가 /cupid/{사이트키} 또는 ?site={사이트키}이면 백엔드 모드, 아니면 data.js 데모 화면입니다.
+// 주소가 .../{사이트키}(예: cupid.urluv.shop/{사이트키}) 또는 ?site={사이트키}이면 백엔드 모드, 아니면 data.js 데모 화면입니다.
 // 백엔드 모드에서는 비밀번호 확인과 사진·편지를 모두 서버가 맡고, 이 파일들에는 고객 정보가 들어가지 않습니다.
 (function () {
   var KEY_PATTERN = /^[a-km-np-z2-9]{12}$/;
@@ -16,6 +16,12 @@
 
   var key = siteKeyFromLocation();
   if (!key) { window.UrluvSite = { key: null }; return; }
+
+  // 404.html이 ?site={키}로 넘겨준 경우 주소창을 고객이 받은 /{키} 모양으로 되돌립니다.
+  // (로컬 정적 서버는 /{키} 새로고침을 못 하므로 그대로 둡니다.)
+  if (!LOCAL && new URLSearchParams(location.search).get("site") === key) {
+    history.replaceState(null, "", location.pathname.replace(/[^/]*$/, "") + key + location.hash);
+  }
 
   var S = window.SITE;
   var tokenKey = "anniv-site-token:" + key;
