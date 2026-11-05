@@ -92,7 +92,17 @@
     tick();
     if (!openWins.information) openInformation();
   }
-  if (site.key) {
+  if (site.key && site.previewing) {
+    // 운영자 미리보기: 비밀번호 화면을 건너뛰고 바로 엽니다.
+    var banner = document.createElement("p");
+    banner.className = "admin-preview-banner";
+    banner.setAttribute("role", "status");
+    banner.textContent = "관리자 미리보기 · 고객에게는 비밀번호 화면부터 보여요";
+    document.body.appendChild(banner);
+    site.preview().then(function () { enter(); }, function (error) {
+      banner.textContent += " · " + (error && error.message || "사이트를 불러오지 못했어요.");
+    });
+  } else if (site.key) {
     // 받는 분 이름과 힌트를 잠금 화면에 보여 주고, 이 탭에서 이미 열었으면 바로 들어갑니다.
     site.lock().then(function (lock) {
       $("#login-user").value = lock.recipientName || "";

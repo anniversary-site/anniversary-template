@@ -95,6 +95,16 @@
 
   function forget() { try { sessionStorage.removeItem(tokenKey); } catch (e) {} }
 
+  // 운영자 미리보기: 관리자 화면이 연 주소 끝의 #preview={토큰}. 주소창에서 바로 지우고 이 탭에만 기억합니다(30분 뒤 서버가 거절).
+  var previewKey = "anniv-site-preview:" + key;
+  var previewToken = new URLSearchParams(location.hash.slice(1)).get("preview");
+  try {
+    if (previewToken) {
+      sessionStorage.setItem(previewKey, previewToken);
+      history.replaceState(null, "", location.pathname + location.search);
+    } else previewToken = sessionStorage.getItem(previewKey);
+  } catch (e) {}
+
   window.UrluvSite = {
     key: key,
     // 잠금 화면 정보(받는 분 이름·힌트). 비밀번호 없이 받을 수 있습니다.
@@ -116,6 +126,15 @@
       if (!saved || !saved.siteAccessToken || !(Date.parse(saved.expiresAt) > Date.now())) return Promise.resolve(false);
       return load(saved.siteAccessToken).catch(function () { forget(); return false; });
     },
-    forget: forget
+    forget: forget,
+    // 운영자 미리보기면 비밀번호 없이 내용을 채웁니다. 미리보기가 아니면 false.
+    previewing: !!previewToken,
+    preview: function () {
+      if (!previewToken) return Promise.resolve(false);
+      return load(previewToken).catch(function (error) {
+        if (error && error.status === 401) error.message = "미리보기 링크가 만료됐어요. 관리자 화면에서 다시 열어주세요.";
+        throw error;
+      });
+    }
   };
 })();
