@@ -41,7 +41,8 @@
     return fetch(API_URL + path, {
       method: options.method || "GET",
       headers: headers,
-      body: options.body ? JSON.stringify(options.body) : undefined
+      body: options.body ? JSON.stringify(options.body) : undefined,
+      keepalive: !!options.keepalive
     }).catch(function () {
       throw { status: 0, code: "NETWORK", message: "연결이 불안정해요. 잠시 후 다시 시도해 주세요." };
     }).then(function (response) {
@@ -89,9 +90,14 @@
     if (content.linkUrl) S.icons.forEach(function (icon) { if (icon.type === "link") icon.url = content.linkUrl; });
   }
 
+  // 내용을 연 토큰을 메모 저장에도 씁니다.
+  var activeToken = null;
   function load(token) {
-    return call("/sites/" + key, { token: token }).then(function (content) { apply(content); return true; });
+    return call("/sites/" + key, { token: token }).then(function (content) {
+      apply(content); activeToken = token; return true;
+    });
   }
+  var memoPath = "/sites/" + key + "/memos";
 
   function forget() { try { sessionStorage.removeItem(tokenKey); } catch (e) {} }
 
@@ -127,6 +133,20 @@
       return load(saved.siteAccessToken).catch(function () { forget(); return false; });
     },
     forget: forget,
+    // 바탕화면 메모는 서버에 한 장씩 저장해서 어느 기기에서 열어도 같고, 서로 다른 메모를 지우지 않습니다.
+    // 운영자 미리보기에서는 보기만 합니다.
+    memos: {
+      list: function () { return call(memoPath, { token: activeToken }); },
+      save: function (note, keepalive) {
+        return call(memoPath + "/" + encodeURIComponent(note.id), {
+          method: "PUT", token: activeToken, keepalive: keepalive,
+          body: { text: note.text, x: Math.max(0, Math.round(note.x)), y: Math.max(0, Math.round(note.y)) }
+        });
+      },
+      remove: function (id) {
+        return call(memoPath + "/" + encodeURIComponent(id), { method: "DELETE", token: activeToken });
+      }
+    },
     // 운영자 미리보기면 비밀번호 없이 내용을 채웁니다. 미리보기가 아니면 false.
     previewing: !!previewToken,
     preview: function () {
