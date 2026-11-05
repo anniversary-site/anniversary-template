@@ -4,7 +4,9 @@
   var preview = placement.querySelector('.memo-preview');
   var add = document.querySelector('#memo-add');
   var toggle = document.querySelector('#memo-toggle');
-  var storageKey = 'anniv-desktop-memos-v2';
+  // 고객 사이트마다 메모를 따로 저장합니다.
+  var siteKey = window.UrluvSite && window.UrluvSite.key;
+  var storageKey = 'anniv-desktop-memos-v2' + (siteKey ? ':' + siteKey : '');
   var notes = [], visible = true, initialized = false, order = 1;
   try {
     var saved = localStorage.getItem(storageKey);
@@ -13,7 +15,7 @@
       if (Array.isArray(parsed)) notes = parsed.filter(function (n) {
         return n && typeof n.id === 'string' && typeof n.text === 'string' && Number.isFinite(n.x) && Number.isFinite(n.y);
       });
-    } else {
+    } else if (!siteKey) {
       var oldText = localStorage.getItem('anniv-desktop-memo');
       if (oldText) notes.push({ id: 'imported-memo', text: oldText, x: 140, y: 30 });
     }

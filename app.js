@@ -50,14 +50,33 @@
     return H.map(function (h) { return ("00000000" + (h >>> 0).toString(16)).slice(-8); }).join("");
   }
 
+  var site = window.UrluvSite || { key: null };
+
+  function wrongPassword(message) {
+    $("#login-err").textContent = message || "Wrong Password!";
+    $("#login-err").hidden = false;
+    var l = $("#login"); l.classList.remove("shake"); void l.offsetWidth; l.classList.add("shake");
+    $("#login-pw").select();
+  }
+
+  var checking = false;
   function tryLogin() {
+    // 고객 사이트: 비밀번호 확인과 내용은 서버가 줍니다.
+    if (site.key) {
+      if (checking) return;
+      checking = true; $("#login-ok").disabled = true;
+      site.open($("#login-pw").value).then(function (ok) {
+        if (ok) enter(); else wrongPassword();
+      }, function (error) {
+        wrongPassword(error && error.message);
+      }).then(function () { checking = false; $("#login-ok").disabled = false; });
+      return;
+    }
     if (sha256(S.passwordSalt + $("#login-pw").value) === S.passwordHash) {
       try { sessionStorage.setItem("anniv-auth", "1"); } catch (e) {}
       enter();
     } else {
-      $("#login-err").hidden = false;
-      var l = $("#login"); l.classList.remove("shake"); void l.offsetWidth; l.classList.add("shake");
-      $("#login-pw").select();
+      wrongPassword();
     }
   }
   $("#login-ok").onclick = tryLogin;
@@ -73,7 +92,19 @@
     tick();
     if (!openWins.information) openInformation();
   }
-  try { if (sessionStorage.getItem("anniv-auth") === "1") { setTimeout(enter, 0); } } catch (e) {}
+  if (site.key) {
+    // 받는 분 이름과 힌트를 잠금 화면에 보여 주고, 이 탭에서 이미 열었으면 바로 들어갑니다.
+    site.lock().then(function (lock) {
+      $("#login-user").value = lock.recipientName || "";
+      $("#login-msg").textContent = lock.passwordHint ? S.loginMessage + "\n(힌트: " + lock.passwordHint + ")" : S.loginMessage;
+    }, function (error) {
+      $("#login-msg").textContent = error && error.message || "사이트를 불러오지 못했어요.";
+      $("#login-pw").disabled = true; $("#login-ok").disabled = true;
+    });
+    site.resume().then(function (ok) { if (ok) enter(); });
+  } else {
+    try { if (sessionStorage.getItem("anniv-auth") === "1") { setTimeout(enter, 0); } } catch (e) {}
+  }
 
   // ---------- clock / d-day ----------
   function tick() {
@@ -417,6 +448,6 @@
     if (act === "information") openInformation();
     else if (act === "booth") openBooth();
     else if (act === "paint") openPaint();
-    else if (act === "logout") { try { sessionStorage.removeItem("anniv-auth"); } catch (er) {} location.reload(); }
+    else if (act === "logout") { try { sessionStorage.removeItem("anniv-auth"); } catch (er) {} if (site.forget) site.forget(); location.reload(); }
   });
 })();
