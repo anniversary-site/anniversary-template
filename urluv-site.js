@@ -28,7 +28,7 @@
 
   // 데모 내용이 고객 화면에 섞이지 않도록 먼저 비워 둡니다. 서버 내용은 비밀번호 확인 뒤에 채웁니다.
   S.passwordHash = null;
-  S.loginMessage = "전달받은 비밀번호를 입력해 주세요.";
+  S.loginMessage = "비밀번호를 입력해 주세요.";
   S.userName = "";
   S.names = [];
   S.information = {};
