@@ -144,6 +144,13 @@ select {
   gap: 8px;
 }
 
+/* 데모 화면에서만 보이는 우회 버튼 */
+.login-demo {
+  padding: 0 18px 14px;
+  background: var(--light);
+  text-align: right;
+}
+
 #login-win {
   width: min(460px,94vw);
 }

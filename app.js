@@ -113,6 +113,12 @@
     });
     site.resume().then(function (ok) { if (ok) enter(); });
   } else {
+    // 데모 화면: 비밀번호를 몰라도 둘러볼 수 있게 우회 버튼을 보여 줍니다(고객 사이트에는 없음).
+    $("#login-demo-row").hidden = false;
+    $("#login-demo").onclick = function () {
+      try { sessionStorage.setItem("anniv-auth", "1"); } catch (e) {}
+      enter();
+    };
     try { if (sessionStorage.getItem("anniv-auth") === "1") { setTimeout(enter, 0); } } catch (e) {}
   }
 
