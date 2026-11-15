@@ -105,6 +105,24 @@
       layer.appendChild(p);
     });
   }
+  // 다른 방문자가 남긴 메모도 열린 페이지에 주기적으로 반영합니다.
+  function syncServer() {
+    if (!server || document.hidden || !initialized || !placement.hidden) return;
+    site.memos.list().then(function (list) {
+      var remote = validNotes(list).map(function (m) { return { id: m.id, text: m.text, x: m.x, y: m.y }; });
+      var byId = Object.create(null);
+      remote.forEach(function (n) { byId[n.id] = n; });
+      // 아직 저장되지 않은 내 입력이나 이동은 덮어쓰지 않습니다.
+      notes.forEach(function (n) {
+        if (pending[n.id] || timers[n.id]) byId[n.id] = n;
+      });
+      var next = Object.keys(byId).map(function (id) { return byId[id]; });
+      if (JSON.stringify(next) !== JSON.stringify(notes)) {
+        notes = next;
+        render();
+      }
+    }).catch(function () {});
+  }
   function size() {
     return { width: Math.min(260, innerWidth - 16), height: Math.min(240, Math.max(80, innerHeight - 54)) };
   }
@@ -199,6 +217,7 @@
   window.addEventListener('resize', function () {
     Array.from(layer.children).forEach(function (card, i) { if (notes[i]) move(card, notes[i]); });
   });
+  window.setInterval(syncServer, 3000);
   if (readOnly) { add.disabled = true; add.title = '미리보기에서는 메모를 붙일 수 없어요.'; }
   window.DesktopMemos = { enter: function () {
     if (!initialized) { render(); initialized = true; if (server) loadServer(); }

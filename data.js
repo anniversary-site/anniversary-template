@@ -26,7 +26,7 @@ window.SITE = {
     { id: "record",  label: "Music",    icon: "assets/icons/music.svg", type: "folder", ref: "record" },
     { id: "booth",   label: "Photobooth",icon: "assets/icons/photo booth.svg", type: "photobooth" },
     { id: "game", label: "Game", icon: "assets/icons/game.svg", type: "folder", ref: "game" },
-    { id: "paint",   label: "Paint",     icon: "assets/icons/paint.svg", type: "paint" },
+    { id: "paint",   label: "내 그림",     icon: "assets/icons/paint.svg", type: "paint" },
     { id: "net",     label: "Internet",  icon: "assets/icons/internet.svg", type: "link", url: "https://urluv.shop/" },
     { id: "trash",   label: "Recycle Bin", icon: "assets/icons/recycle bin.svg", type: "trash" }
   ],
