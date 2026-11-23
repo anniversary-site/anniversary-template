@@ -51,6 +51,7 @@
   }
 
   var site = window.UrluvSite || { key: null };
+  var orderEditor = new URLSearchParams(location.search).has("orderEditor") && window.parent !== window;
 
   function wrongPassword(message) {
     $("#login-err").textContent = message || "Wrong Password!";
@@ -80,7 +81,11 @@
     }
   }
   $("#login-ok").onclick = tryLogin;
-  $("#login-pw").addEventListener("keydown", function (e) { if (e.key === "Enter") tryLogin(); });
+  $("#login-pw").addEventListener("keydown", function (e) {
+    if (e.key !== "Enter") return;
+    if (orderEditor) { e.preventDefault(); $("#login-ok").click(); }
+    else tryLogin();
+  });
   $("#login-cancel").onclick = function () { $("#login-pw").value = ""; $("#login-err").hidden = true; };
 
   function enter() {
@@ -112,6 +117,8 @@
       $("#login-pw").disabled = true; $("#login-ok").disabled = true;
     });
     site.resume().then(function (ok) { if (ok) enter(); });
+  } else if (orderEditor) {
+    // 주문 사이트가 로그인 화면부터 단계별로 보여 줍니다.
   } else {
     // 데모 화면: 비밀번호를 몰라도 둘러볼 수 있게 우회 버튼을 보여 줍니다(고객 사이트에는 없음).
     $("#login-demo-row").hidden = false;
@@ -641,4 +648,20 @@
     else if (act === "paint") openPaint();
     else if (act === "logout") { try { sessionStorage.removeItem("anniv-auth"); } catch (er) {} if (site.forget) site.forget(); location.reload(); }
   });
+  if (orderEditor) {
+    window.UrluvEditorHooks = {
+      enter: enter,
+      openInformation: openInformation,
+      openNote: openNote,
+      createWin: createWin,
+      highlight: function () {},
+      closeAll: function () {
+        Object.keys(openWins).forEach(function (key) {
+          openWins[key].el.remove();
+          openWins[key].task.remove();
+          delete openWins[key];
+        });
+      }
+    };
+  }
 })();
