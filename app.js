@@ -95,7 +95,8 @@
     buildDesktop();
     window.DesktopMemos.enter();
     tick();
-    if (!openWins.information) openInformation();
+    if (orderEditor) openInformation();
+    else openNotice();
   }
   if (site.key && site.previewing) {
     // 운영자 미리보기: 비밀번호 화면을 건너뛰고 바로 엽니다.
@@ -247,6 +248,30 @@
   }
 
   // ---------- apps ----------
+  function openNotice() {
+    createWin("notice", "공지사항", { w: 540, h: 430 }, function (w, body) {
+      var content = el("div", "content site-notice");
+      var sections = [
+        ["이 사이트에서 할 수 있는 일", [
+          "Our Story와 Letter를 읽고 사진·영상 폴더, Music, Internet 아이콘을 열어 보세요.",
+          "포토부스에서 사진을 찍고, Paint에서 그림을 그리거나 게임을 즐길 수 있어요.",
+          "바탕화면에 메모를 남겨 마음을 전할 수 있어요."
+        ]],
+        ["이용 전 확인해 주세요", [
+          "메모·그림·포토부스 결과물은 이 사이트를 함께 보는 사람에게도 보여요. 개인 정보는 남기지 마세요.",
+          "음악은 연결된 YouTube 영상의 설정에 따라 재생되지 않을 수 있어요."
+        ]]
+      ];
+      sections.forEach(function (section) {
+        var heading = el("h2"); heading.textContent = section[0];
+        var list = el("ul");
+        section[1].forEach(function (line) { var item = el("li"); item.textContent = line; list.appendChild(item); });
+        content.append(heading, list);
+      });
+      body.appendChild(content);
+    });
+  }
+
   function openInformation() {
     createWin("information", "Our Story", { w: 520, h: 360 }, function (w, body) {
       var info = S.information || {};
@@ -643,7 +668,8 @@
   sm.addEventListener("click", function (e) {
     var a = e.target.closest("button"); if (!a) return; sm.hidden = true;
     var act = a.dataset.act;
-    if (act === "information") openInformation();
+    if (act === "notice") openNotice();
+    else if (act === "information") openInformation();
     else if (act === "booth") openBooth();
     else if (act === "paint") openPaint();
     else if (act === "logout") { try { sessionStorage.removeItem("anniv-auth"); } catch (er) {} if (site.forget) site.forget(); location.reload(); }
